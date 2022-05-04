@@ -1,0 +1,19 @@
+>To begin, we download the nesecarry files from the challenge page and extract them.
+
+>After extracting, I decided to cat out the key.pub to see what we're dealing with. Sweet! It's very short, surely there's some brute forcing here!
+
+>I start poking around the internet for suitable tools, I stumble across the openssl linux command, which will come into play as soon as we have the private key.
+
+>I found a perfect article that contained some useful information about RSA vulnerabilites when it comes to weak keys. Most importantly, it linked to the GitHub for RsaCtfTool.
+
+>After cloning the git repository, I had a look around the README, installed the dependancies, and launched the python tool.
+
+>It took one "-help" command to figure out the syntax, I fed in the public key... and BAM, the private key was printed in less than 30 seconds.
+
+>Using the output, I made a file for the private key. Now here's where openssl comes into play, using `openssl rsautl` I fed the files and just like magic, there's the flag.
+
+Conclusions:
+This was a very simple challenge, it all came down to finding the right tools. I would love to take a deeper dive into RsaCtfTool, and try to recreate my own, but for now I got the flag.
+Remember, search engines are your best friend. Use them wisely, and they will guide you in the right direciton.
+
+-Fr3ki

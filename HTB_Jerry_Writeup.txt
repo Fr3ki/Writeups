@@ -1,0 +1,28 @@
+>Start of with a clasic... Nmap using -Sv to find services -Sc to test default scripts.
+
+>Scan reveals port 8080 has Tomcat/7.0.88 - Visiting that in a web browser shows the Tomcat default page.
+
+>Poking around, I try the "Host Manager" which initiated a login prompt. After failing the first time, I get an error page, where I notice it mentions the credentials tomcat:s3cret.
+
+>Retrying the login with the credentials from the error page takes me to the host manager page. Sucess! As an extra bonus, I see an area to upload files!
+
+>Not being completely sure what a WAR file is, I turn to the internet. I find out that WAR (Web Application Archive) files can be uploaded and run to gain administrative privelages.
+
+>Now for a trip to our good old friend hacktricks.xyz, not much more than we already knew there.
+
+>I move on to trying to create a reverse shell in .war format, I found a msfvenom command to do the job.
+
+>I browse for and upload the WAR file and start a nc listener. After deploying, I clicked the entry in the manager and got a connection.
+
+>Now to traverse the file system to find the flag. I immediately go to Users\Administrator\Desktop and find the flags diretory
+
+>Submit the flags for a sucessful PWN!
+
+Conclusions:
+I appologize for the vaugeness of this writeup, but perhaps it will help you to learn information gathering. Mostly, it's just late, and I'm tired.
+
+Don't think you're too good for default credentials, it's always worth a shot.
+
+I've said it once, and I'll keep saying it. Search engines are a hackers best friend, learn to use them well, it will be the sharpest dagger in your colleciton.
+
+-Fr3ki 

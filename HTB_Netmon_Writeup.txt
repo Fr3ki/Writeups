@@ -1,0 +1,41 @@
+>We start with a classic nmap scan using -sV for services and -sC for common scripts.
+ >This shows us that port 80 is hosting: PRTG bandwith monitor 18.1.37.13946.
+ >We can also see that port 21 is hosting an FTP server, let's run with that.
+
+>Looking at the nmap scan, it lets us know anonymous auth is allowed for FTP, so I try it in the my terminal, and get a connection.
+
+>Immediately my CTF instincts kick in and I make a mad directory dash to the Users/Public folder and list the contents. Just like that, user flag is pwned. Not even a drop of sweat spent.
+
+>Now to escalate privelages. I started poking around the file system and reading logs, when I remembered port 80 is open.
+ >I opened the IP in my browser, and was greeted with a login page, I tried admin:admin, and prtgadmin:prtgadmin, which is the default credentials I located with a search. No luck.
+ >Most likely unrelated to the challenge, I noticed the url contains an "?errormessage=", with the same value that was displayed in red on my screen. After playing around to make it say dumb stuff, it's back to buisness.
+
+>I go for an obligitory exploitDB/(Insert prefered search engine) search, using the application name and version obtained from nmap.
+
+>Not much catches my eye at first, so I go back to FTP to see if I can find the directory where the webapp is installed, and I do. It's in Program Files (x86)/PRTG Network Monitor/. I start digging through that, and grab the setup log, as well as some keys in the cert file. 
+ >Agian, not much of interest, found out the admin email is na@na.com, but that's most likely just a dummy/placeholder.
+
+>At this point, I got stuck, and had to go to someone else's walkthrough for a hint. I try to use as little as I can, so I only read to where I had already gotten. Turns out, there is an old configuration file in ProgramData/Paessler/PRTG Network Monitor. I was on the right track, just in the wrong directory. They located this via the PRTG Docs.
+ >In this old config file, there are credentials listed, so lets try those on the portal. Success!
+
+>Now is where that search from earlier comes in. I had found an exploit for RCE, but it required you to be authenticated. Let's try to exploit it. CVE-2018-9276.
+
+>Downloading, reading through, and running the exploit, it appears there are some cookies you need to pass in for this to work properly, so I grab the cookie manager extension, and grab those values.
+ >I grabbed the needed data, but there were a few minor bugs in the code. Luckily, I'm alright with Bash, and did some minor debugging to get it working. I'm no master by any means, but I can fix some broken syntax.
+
+>From here, just run the script, create the account, use psexec from impacket to get a PS session and there's your pwn.
+
+Resources:
+https://github.com/chcx/PRTG-Network-Monitor-RCE
+
+
+Conclusions:
+Sometimes you'll have to debug exploit code. Ideally, write your own, it will allow you to learn quicker, but I'm still getting back on the CTF horse at the moment.
+
+FTP anonymous logins can be a huge vulnerability, with no password, we were able to find administrative credentials. Eventually, this led to us getting root.
+
+ExploitDB can be a bit janky when it comes to searches at first, but as you learn to use it, it's amazing.
+
+Check if the application versions from your research match the current version, if not, check for previous vulnerabilities on that version.
+
+-Fr3ki
